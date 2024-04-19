@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./style.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        text-decoration: none !important;
+        list-style-type: none;
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-style: normal;
+      }
+      nav {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 10px;
+        background-color: #05aaa2;
+      }
+      .rightSide {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: white;
+      }
+      form {
+        display: flex;
+        align-items: center;
+      }
+      input[type="text"] {
+        padding: 8px;
+        margin-right: -4px; /* Aligns button closely with the input */
+        border: none;
+        border-radius: 4px 0 0 4px;
+      }
+      input[type="text"]:focus {
+        outline: none;
+      }
+      button {
+        padding: 8px 12px;
+        background: #ffffff;
+        border: none;
+        border-radius: 0 4px 4px 0;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #e1e1e1;
+      }
+      button i {
+        color: #05aaa2;
+      }
+      .artists {
+        margin-top: 20px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .artist {
+        width: 300px;
+        height: 120px;
+        padding: 5px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-direction: column;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px,
+          rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px,
+          rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px,
+          rgba(0, 0, 0, 0.07) 0px 32px 64px;
+      }
+
+      .artist h2 {
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .artist ul {
+        list-style-type: none;
+        padding-left: 5px;
+      }
+
+      .artist li {
+        padding: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="rightSide">
+        <i class="fa-solid fa-guitar"></i>
+        <h1>XmlArtist</h1>
+      </div>
+
+      <form action="/" method="get">
+        <input
+          type="text"
+          id="artist_name"
+          name="query"
+          placeholder="Enter the artist name..."
+        />
+        <button type="submit"><i class="fa-solid fa-search"></i></button>
+      </form>
+    </nav>
+    <div class="artists" id="artists">
+      {% for artist in artists_albums %}
+      <div class="artist">
+        <h2>{{ artist.name }}</h2>
+        <ul>
+          {% for album in artist.albums %}
+          <li>{{ album.year }} - {{ album.title }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+    <script>
+      const form = document.querySelector("form");
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const query = document.getElementById("artist_name").value;
+        fetch(`/search?query=${encodeURIComponent(query)}`)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            updateArtistList(data);
+          })
+          .catch((error) => console.log(error));
+      });
+
+      function updateArtistList(data) {
+        const container = document.getElementById("artists");
+        container.innerHTML = ""; //
+        if (data.length > 0) {
+          data.forEach((artist) => {
+            const artistDiv = document.createElement("div");
+            artistDiv.classList.add("artist");
+            artistDiv.innerHTML = `
+                <h2>${artist.name}</h2>
+                <ul>
+                    ${artist.albums
+                      .map((album) => `<li>${album.year} - ${album.title}</li>`)
+                      .join("")}
+                </ul>
+            `;
+            container.appendChild(artistDiv);
+          });
+        } else {
+          container.innerHTML = "<p>No artists found.</p>";
+        }
+      }
+    </script>
+  </body>
+</html>

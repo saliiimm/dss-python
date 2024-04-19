@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphe xmlns:xsl="http://www.graphe.org" nbs="3">
+<sommet setiq="a01" marqué="oui"/>
+<sommet setiq="b01" marqué="oui"/>
+<sommet setiq="b02" marqué="non"/>
+<arc sommet="a01" sbut="b01">
+<aetiq>32</aetiq>
+<cout>400</cout>
+</arc>
+<arc sommet="a01" sbut="b02" >
+<aetiq>40</aetiq>
+<cout>200</cout>
+</arc>
+<arc sommet="b01" sbut="b02" >
+<aetiq>13</aetiq>
+<cout>340</cout>
+</arc>
+</graphe>
