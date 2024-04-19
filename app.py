@@ -19,7 +19,8 @@ def find_artist_by_name_partial(name):
                 if album.find('ref-artiste').get('ref') == artist_no:
                     artist_albums.append({
                         'title': album.find('titre').text,
-                        'year': album.get('annee')
+                        'year': album.get('annee'),
+                        'songs': [song.text for song in album.findall('chansons/chanson')]
                     })
             matched_artists.append({
                 'name': artist.get('nom'),
@@ -39,7 +40,8 @@ def find_all():
                 if album.find('ref-artiste').get('ref') == artist_no:
                     artist_albums.append({
                         'title': album.find('titre').text,
-                        'year': album.get('annee')
+                        'year': album.get('annee'),
+                        'songs': [song.text for song in album.findall('chansons/chanson')]
                     })
             matched_artists.append({
                 'name': artist.get('nom'),

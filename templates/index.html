@@ -83,7 +83,7 @@
 
       .artist {
         width: 300px;
-        height: 120px;
+        height: 250px;
         padding: 5px;
         margin-bottom: 20px;
         display: flex;
@@ -136,6 +136,11 @@
         <ul>
           {% for album in artist.albums %}
           <li>{{ album.year }} - {{ album.title }}</li>
+          <ul>
+            {% for song in album.songs %}
+            <li>{{ song }}</li>
+            {% endfor %}
+          </ul>
           {% endfor %}
         </ul>
       </div>
@@ -166,7 +171,16 @@
                 <h2>${artist.name}</h2>
                 <ul>
                     ${artist.albums
-                      .map((album) => `<li>${album.year} - ${album.title}</li>`)
+                      .map(
+                        (album) => `
+                      <li>${album.year} - ${album.title}
+                          <ul>
+                              ${album.songs
+                                .map((song) => `<li>${song}</li>`)
+                                .join("")}
+                          </ul>
+                      </li>`
+                      )
                       .join("")}
                 </ul>
             `;
